@@ -16,7 +16,7 @@ public class ABCommon {
     public static void register(Listener listener, Plugin plugin) {
         for (Plugin p : Bukkit.getServer().getPluginManager().getPlugins()) {
             for (RegisteredListener registeredListener : HandlerList.getRegisteredListeners(p)) {
-                if (registeredListener.getListener().equals(listener)) {
+                if (registeredListener.getListener().getClass().equals(listener.getClass())) {
                     Bukkit.getLogger().log(Level.INFO, "Not Registering listener {0} with plugin {1} as it has already been registered",
                             new String[]{listener.getClass().getSimpleName(), plugin.getName()});
                     return;
