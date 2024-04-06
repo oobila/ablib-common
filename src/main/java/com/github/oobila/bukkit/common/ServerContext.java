@@ -29,6 +29,14 @@ public class ServerContext {
         }
     }
 
+    public <T> T remove(Class<T> type, String name) {
+        try {
+            return type.cast(data.get(type).remove(name));
+        } catch (NullPointerException | ClassCastException e) {
+            return null;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public <T> Collection<T> get(Class<T> type) {
         return (Collection<T>) data.get(type).values();

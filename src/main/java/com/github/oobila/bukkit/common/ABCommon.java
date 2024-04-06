@@ -28,6 +28,10 @@ public class ABCommon {
         return getABCoreServerContext().get(type, name);
     }
 
+    public static <T> T remove(Class<T> type, String name) throws CannotFindABCoreException {
+        return getABCoreServerContext().remove(type, name);
+    }
+
     public static <T> Collection<T> get(Class<T> type) throws CannotFindABCoreException {
         return getABCoreServerContext().get(type);
     }
