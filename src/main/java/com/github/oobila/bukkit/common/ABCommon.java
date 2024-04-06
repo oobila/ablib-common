@@ -3,30 +3,55 @@ package com.github.oobila.bukkit.common;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredListener;
 
-import java.util.logging.Level;
+import java.util.Collection;
 
+@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ABCommon {
 
-    @SuppressWarnings("java:S1872")
-    public static void register(Listener listener, Plugin plugin) {
-        for (Plugin p : Bukkit.getServer().getPluginManager().getPlugins()) {
-            for (RegisteredListener registeredListener : HandlerList.getRegisteredListeners(p)) {
-                if (registeredListener.getListener().getClass().getName().equals(listener.getClass().getName())) {
-                    Bukkit.getLogger().log(Level.INFO, "Not Registering listener {0} with plugin {1} as it has already been registered",
-                            new String[]{listener.getClass().getSimpleName(), plugin.getName()});
-                    return;
-                }
-            }
-        }
+    private static final String ABCORE_PLUGIN_NAME = "ABCore";
+    private static final String GET_SERVER_CONTEXT_METHOD_NAME = "getServerContext";
 
-        Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
-        Bukkit.getLogger().log(Level.INFO, "Registering listener {0} with plugin {1}", new String[]{listener.getClass().getSimpleName(), plugin.getName()});
+    public <T> void store(Class<?> type, String name, T object) throws CannotFindABCoreException {
+        getABCoreServerContext().store(type, name, object);
+    }
+
+    public <T> void store(String name, T object) throws CannotFindABCoreException {
+        getABCoreServerContext().store(name, object);
+    }
+
+    public <T> T get(Class<T> type, String name) throws CannotFindABCoreException {
+        return getABCoreServerContext().get(type, name);
+    }
+
+    public <T> Collection<T> get(Class<T> type) throws CannotFindABCoreException {
+        return getABCoreServerContext().get(type);
+    }
+
+    public <T> void register(Plugin plugin, T object) throws CannotFindABCoreException {
+        //only used for registering listeners
+        Class<?> type = object.getClass();
+        if (Listener.class.isAssignableFrom(type)) {
+            Bukkit.getPluginManager().registerEvents((Listener) object, plugin);
+            store(Listener.class, object.getClass().getName(), object);
+        } else {
+            store(type, object.getClass().getName(), object);
+        }
+    }
+
+    private ServerContext getABCoreServerContext() throws CannotFindABCoreException {
+        try {
+            Plugin plugin = Bukkit.getPluginManager().getPlugin(ABCORE_PLUGIN_NAME);
+            if (plugin != null) {
+                return (ServerContext) plugin.getClass().getMethod(GET_SERVER_CONTEXT_METHOD_NAME).invoke(plugin);
+            }
+            throw new CannotFindABCoreException();
+        } catch (Exception e) {
+            throw new CannotFindABCoreException(e);
+        }
     }
 
 }
