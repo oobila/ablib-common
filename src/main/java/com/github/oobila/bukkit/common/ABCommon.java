@@ -16,11 +16,11 @@ public class ABCommon {
     private static final String ABCORE_PLUGIN_NAME = "ABCore";
     private static final String GET_SERVER_CONTEXT_METHOD_NAME = "getServerContext";
 
-    public static <T> void store(Class<?> type, String name, T object) throws CannotFindABCoreException {
+    public static <T> void store(Class<?> type, String name, T object) throws CannotFindABCoreException, ServerContextException {
         getABCoreServerContext().store(type, name, object);
     }
 
-    public static <T> void store(String name, T object) throws CannotFindABCoreException {
+    public static <T> void store(String name, T object) throws CannotFindABCoreException, ServerContextException {
         getABCoreServerContext().store(name, object);
     }
 
@@ -32,7 +32,7 @@ public class ABCommon {
         return getABCoreServerContext().get(type);
     }
 
-    public static <T> void register(Plugin plugin, T object) throws CannotFindABCoreException {
+    public static <T> void register(T object, Plugin plugin) throws CannotFindABCoreException, ServerContextException {
         //only used for registering listeners
         Class<?> type = object.getClass();
         if (Listener.class.isAssignableFrom(type)) {
