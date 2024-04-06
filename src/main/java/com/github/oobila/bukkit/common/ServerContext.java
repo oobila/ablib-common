@@ -9,16 +9,17 @@ public class ServerContext {
     private final Map<Class<?>, TypeMap<?>> data = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    public <S, T> void store(Class<S> type, String name, T object) throws ServerContextException {
+    public <S, T> T store(Class<S> type, String name, T object) throws ServerContextException {
         data.putIfAbsent(type, new TypeMap<>(type));
         if (data.get(type).containsKey(name)) {
             throw new ServerContextException(String.format("[%s] already exists for class: %s", name, type.getName()));
         }
         ((TypeMap<S>) data.get(type)).put(name, (S) object);
+        return object;
     }
 
-    public <T> void store(String name, T object) throws ServerContextException {
-        store(object.getClass(), name, object);
+    public <T> T store(String name, T object) throws ServerContextException {
+        return store(object.getClass(), name, object);
     }
 
     public <T> T get(Class<T> type, String name) {

@@ -16,12 +16,12 @@ public class ABCommon {
     private static final String ABCORE_PLUGIN_NAME = "ABCore";
     private static final String GET_SERVER_CONTEXT_METHOD_NAME = "getServerContext";
 
-    public static <T> void store(Class<?> type, String name, T object) throws CannotFindABCoreException, ServerContextException {
-        getABCoreServerContext().store(type, name, object);
+    public static <T> T store(Class<?> type, String name, T object) throws CannotFindABCoreException, ServerContextException {
+        return getABCoreServerContext().store(type, name, object);
     }
 
-    public static <T> void store(String name, T object) throws CannotFindABCoreException, ServerContextException {
-        getABCoreServerContext().store(name, object);
+    public static <T> T store(String name, T object) throws CannotFindABCoreException, ServerContextException {
+        return getABCoreServerContext().store(name, object);
     }
 
     public static <T> T get(Class<T> type, String name) throws CannotFindABCoreException {
