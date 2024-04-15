@@ -1,10 +1,13 @@
 package com.github.oobila.bukkit.common;
 
+import org.bukkit.plugin.Plugin;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ServerContext {
+    private static final String GET_SERVER_CONTEXT_METHOD_NAME = "getServerContext";
 
     private final Map<Class<?>, TypeMap<?>> data = new HashMap<>();
 
@@ -41,6 +44,15 @@ public class ServerContext {
     @SuppressWarnings("unchecked")
     public <T> Collection<T> get(Class<T> type) {
         return (Collection<T>) data.get(type).values();
+    }
+
+    public static ServerContext fromABCore() throws CannotFindABCoreException {
+        try {
+            Plugin plugin = ABCommon.getABCore();
+            return (ServerContext) plugin.getClass().getMethod(GET_SERVER_CONTEXT_METHOD_NAME).invoke(plugin);
+        } catch (Exception e) {
+            throw new CannotFindABCoreException(e);
+        }
     }
 
 }

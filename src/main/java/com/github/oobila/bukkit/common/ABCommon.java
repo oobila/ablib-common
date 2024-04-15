@@ -3,10 +3,10 @@ package com.github.oobila.bukkit.common;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Collection;
 import java.util.logging.Level;
 
 @SuppressWarnings("unused")
@@ -14,41 +14,26 @@ import java.util.logging.Level;
 public class ABCommon {
 
     private static final String ABCORE_PLUGIN_NAME = "ABCore";
-    private static final String GET_SERVER_CONTEXT_METHOD_NAME = "getServerContext";
-
-    public static <T> T store(Class<?> type, String name, T object) throws CannotFindABCoreException, ServerContextException {
-        return getABCoreServerContext().store(type, name, object);
-    }
-
-    public static <T> T store(String name, T object) throws CannotFindABCoreException, ServerContextException {
-        return getABCoreServerContext().store(name, object);
-    }
-
-    public static <T> T get(Class<T> type, String name) throws CannotFindABCoreException {
-        return getABCoreServerContext().get(type, name);
-    }
-
-    public static <T> T remove(Class<T> type, String name) throws CannotFindABCoreException {
-        return getABCoreServerContext().remove(type, name);
-    }
-
-    public static <T> Collection<T> get(Class<T> type) throws CannotFindABCoreException {
-        return getABCoreServerContext().get(type);
-    }
+    private static final String NAMESPACE = "ab_common";
 
     public static <T> void register(T object, Plugin plugin) throws CannotFindABCoreException, ServerContextException {
         //only used for registering listeners
         Class<?> type = object.getClass();
         if (Listener.class.isAssignableFrom(type)) {
             Bukkit.getPluginManager().registerEvents((Listener) object, plugin);
-            store(Listener.class, object.getClass().getName(), object);
+            ServerContext.fromABCore().store(Listener.class, object.getClass().getName(), object);
         } else {
-            store(type, object.getClass().getName(), object);
+            ServerContext.fromABCore().store(type, object.getClass().getName(), object);
         }
     }
 
     public static void log(Level level, String message, Object... params) {
         Bukkit.getLogger().log(level, message, params);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static NamespacedKey key(String name) {
+        return new NamespacedKey(NAMESPACE, name);
     }
 
     public static void checkRequiredVersion(Plugin plugin, String requiredCoreVersion) throws CannotFindABCoreException {
@@ -68,16 +53,7 @@ public class ABCommon {
         }
     }
 
-    private static ServerContext getABCoreServerContext() throws CannotFindABCoreException {
-        try {
-            Plugin plugin = getABCore();
-            return (ServerContext) plugin.getClass().getMethod(GET_SERVER_CONTEXT_METHOD_NAME).invoke(plugin);
-        } catch (Exception e) {
-            throw new CannotFindABCoreException(e);
-        }
-    }
-
-    private static Plugin getABCore() throws CannotFindABCoreException {
+    static Plugin getABCore() throws CannotFindABCoreException {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(ABCORE_PLUGIN_NAME);
         if (plugin == null) {
             throw new CannotFindABCoreException();
