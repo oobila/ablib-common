@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.logging.Level;
 
@@ -25,6 +26,26 @@ public class ABCommon {
         } else {
             ServerContext.fromABCore().store(type, object.getClass().getName(), object);
         }
+    }
+
+    public static BukkitTask runTask(Runnable task) throws CannotFindABCoreException {
+        return Bukkit.getScheduler().runTask(getABCore(), task);
+    }
+
+    public static BukkitTask runTaskAsync(Runnable task) throws CannotFindABCoreException {
+        return Bukkit.getScheduler().runTaskAsynchronously(getABCore(), task);
+    }
+
+    public static BukkitTask runTaskLater(Runnable task, long ticks) throws CannotFindABCoreException {
+        return Bukkit.getScheduler().runTaskLater(getABCore(), task, ticks);
+    }
+
+    public static BukkitTask runContinuousTask(Runnable task, long ticks) throws CannotFindABCoreException {
+        return Bukkit.getScheduler().runTaskTimer(getABCore(), task, ticks, ticks);
+    }
+
+    public static void cancelTask(int taskId) {
+        Bukkit.getScheduler().cancelTask(taskId);
     }
 
     public static void log(Level level, String message, Object... params) {
@@ -53,7 +74,7 @@ public class ABCommon {
         }
     }
 
-    static Plugin getABCore() throws CannotFindABCoreException {
+    public static Plugin getABCore() throws CannotFindABCoreException {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(ABCORE_PLUGIN_NAME);
         if (plugin == null) {
             throw new CannotFindABCoreException();
