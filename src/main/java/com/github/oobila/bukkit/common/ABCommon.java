@@ -68,7 +68,7 @@ public class ABCommon {
         }
     }
 
-    public void checkForUpdate(Plugin plugin, int spigotId) {
+    public static void checkForUpdate(Plugin plugin, int spigotId) {
         if(spigotId != 0){
             new UpdateChecker(plugin, spigotId);
         }
