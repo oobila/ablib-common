@@ -52,6 +52,10 @@ public class ABCommon {
         Bukkit.getLogger().log(level, message, params);
     }
 
+    public static void log(Level level, Throwable t) {
+        Bukkit.getLogger().log(level, t.getMessage(), t);
+    }
+
     @SuppressWarnings("UnstableApiUsage")
     public static NamespacedKey key(String name) {
         return new NamespacedKey(NAMESPACE, name);
