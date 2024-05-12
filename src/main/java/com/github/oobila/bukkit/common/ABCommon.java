@@ -113,7 +113,7 @@ public class ABCommon {
         T run() throws CannotFindABCoreException, ServerContextException;
     }
 
-    private interface  ABCoreVoidRunnable {
+    private interface ABCoreVoidRunnable {
         void run() throws CannotFindABCoreException, ServerContextException;
     }
 
