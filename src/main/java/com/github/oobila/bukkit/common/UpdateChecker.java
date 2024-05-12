@@ -42,11 +42,7 @@ class UpdateChecker {
                 log(
                         Level.WARNING,
                         MessageFormat.format(ChatColor.stripColor(UPDATE_TEXT), version, plugin.getDescription().getVersion()));
-                try {
-                    register(new JoinEvent(), plugin);
-                } catch (CannotFindABCoreException | ServerContextException e) {
-                    log(Level.SEVERE, e.getMessage());
-                }
+                register(new JoinEvent(), plugin);
             }
         });
     }
