@@ -39,14 +39,8 @@ class UpdateChecker {
             if(new Version(plugin.getDescription().getVersion()).compareTo(new Version(version)) < 0){
                 newVersionAvailable = true;
                 newVersion = version;
-                log(
-                        Level.WARNING,
-                        MessageFormat.format(ChatColor.stripColor(UPDATE_TEXT), version, plugin.getDescription().getVersion()));
-                try {
-                    register(new JoinEvent(), plugin);
-                } catch (CannotFindABCoreException | ServerContextException e) {
-                    log(Level.SEVERE, e.getMessage());
-                }
+                log(Level.WARNING, ChatColor.stripColor(UPDATE_TEXT), version, plugin.getDescription().getVersion());
+                register(new JoinEvent(), plugin);
             }
         });
     }
