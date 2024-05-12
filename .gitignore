@@ -23,7 +23,9 @@
 hs_err_pid*
 replay_pid*
 
-# IntelliJ
-/.idea/
+#project files
 *.iml
-/.target/
+.idea/*
+
+#build files
+target/*
