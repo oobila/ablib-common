@@ -30,19 +30,19 @@ public class ABCommon {
         });
     }
 
-    public static BukkitTask runTask(Runnable task) throws CannotFindABCoreException {
+    public static BukkitTask runTask(Runnable task) {
         return handleABCore(() -> Bukkit.getScheduler().runTask(getABCore(), task));
     }
 
-    public static BukkitTask runTaskAsync(Runnable task) throws CannotFindABCoreException {
+    public static BukkitTask runTaskAsync(Runnable task) {
         return handleABCore(() -> Bukkit.getScheduler().runTaskAsynchronously(getABCore(), task));
     }
 
-    public static BukkitTask runTaskLater(Runnable task, long ticks) throws CannotFindABCoreException {
+    public static BukkitTask runTaskLater(Runnable task, long ticks) {
         return handleABCore(() -> Bukkit.getScheduler().runTaskLater(getABCore(), task, ticks));
     }
 
-    public static BukkitTask runContinuousTask(Runnable task, long ticks) throws CannotFindABCoreException {
+    public static BukkitTask runContinuousTask(Runnable task, long ticks) {
         return handleABCore(() -> Bukkit.getScheduler().runTaskTimer(getABCore(), task, ticks, ticks));
     }
 
