@@ -18,7 +18,7 @@ public class ABCommon {
     private static final String NAMESPACE = "ab_common";
 
     public static <T> void register(T object, Plugin plugin) {
-        handleABCoreException(() -> {
+        handleABCore(() -> {
             //only used for registering listeners
             Class<?> type = object.getClass();
             if (Listener.class.isAssignableFrom(type)) {
@@ -30,28 +30,20 @@ public class ABCommon {
         });
     }
 
-    public static BukkitTask runTask(Runnable task) {
-        return handleABCoreException(() ->
-                Bukkit.getScheduler().runTask(getABCore(), task)
-        );
+    public static BukkitTask runTask(Runnable task) throws CannotFindABCoreException {
+        return handleABCore(() -> Bukkit.getScheduler().runTask(getABCore(), task));
     }
 
-    public static BukkitTask runTaskAsync(Runnable task) {
-        return handleABCoreException(() ->
-                Bukkit.getScheduler().runTaskAsynchronously(getABCore(), task)
-        );
+    public static BukkitTask runTaskAsync(Runnable task) throws CannotFindABCoreException {
+        return handleABCore(() -> Bukkit.getScheduler().runTaskAsynchronously(getABCore(), task));
     }
 
-    public static BukkitTask runTaskLater(Runnable task, long ticks) {
-        return handleABCoreException(() ->
-                Bukkit.getScheduler().runTaskLater(getABCore(), task, ticks)
-        );
+    public static BukkitTask runTaskLater(Runnable task, long ticks) throws CannotFindABCoreException {
+        return handleABCore(() -> Bukkit.getScheduler().runTaskLater(getABCore(), task, ticks));
     }
 
-    public static BukkitTask runContinuousTask(Runnable task, long ticks) {
-        return handleABCoreException(() ->
-                Bukkit.getScheduler().runTaskTimer(getABCore(), task, ticks, ticks)
-        );
+    public static BukkitTask runContinuousTask(Runnable task, long ticks) throws CannotFindABCoreException {
+        return handleABCore(() -> Bukkit.getScheduler().runTaskTimer(getABCore(), task, ticks, ticks));
     }
 
     public static void cancelTask(int taskId) {
@@ -72,7 +64,7 @@ public class ABCommon {
     }
 
     public static void checkRequiredVersion(Plugin plugin, String requiredCoreVersion) {
-        handleABCoreException(() -> {
+        handleABCore(() -> {
             if(requiredCoreVersion != null && !requiredCoreVersion.isEmpty()){
                 Plugin abCore = getABCore();
                 Version coreVersion = new Version(abCore.getDescription().getVersion());
@@ -98,20 +90,20 @@ public class ABCommon {
         return plugin;
     }
 
-    private static <T> T handleABCoreException(ABCoreRunnable<T> runnable) {
+    private static <T> T handleABCore(ABCoreRunnable<T> runnable) {
         try {
             return runnable.run();
-        } catch (Exception e) {
+        } catch (CannotFindABCoreException | ServerContextException e) {
             log(Level.SEVERE, e);
             Bukkit.shutdown();
             return null;
         }
     }
 
-    private static void handleABCoreException(ABCoreVoidRunnable runnable) {
+    private static void handleABCore(ABCoreVoidRunnable runnable) {
         try {
             runnable.run();
-        } catch (Exception e) {
+        } catch (CannotFindABCoreException | ServerContextException e) {
             log(Level.SEVERE, e);
             Bukkit.shutdown();
         }
