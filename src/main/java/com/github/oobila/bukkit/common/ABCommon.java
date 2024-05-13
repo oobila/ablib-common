@@ -18,12 +18,8 @@ public class ABCommon {
     private static final String NAMESPACE = "ab_common";
     private static Plugin plugin;
 
-    public static <T> void register(T object, Plugin plugin) {
-        //only used for registering listeners
-        Class<?> type = object.getClass();
-        if (Listener.class.isAssignableFrom(type)) {
-            Bukkit.getPluginManager().registerEvents((Listener) object, plugin);
-        }
+    public static <T extends Listener> void register(T object, Plugin plugin) {
+        Bukkit.getPluginManager().registerEvents(object, plugin);
     }
 
     public static BukkitTask runTask(Runnable task) {
