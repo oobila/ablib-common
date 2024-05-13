@@ -15,7 +15,7 @@ import java.util.logging.Level;
 public class ABCommon {
 
     private static final String ABCORE_PLUGIN_NAME = "ABCore";
-    private static final String NAMESPACE = "ab_common";
+    private static final String NAMESPACE = "oobila";
     private static Plugin plugin;
 
     public static <T extends Listener> void register(T object, Plugin plugin) {
