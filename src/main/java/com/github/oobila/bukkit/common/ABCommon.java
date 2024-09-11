@@ -1,9 +1,11 @@
 package com.github.oobila.bukkit.common;
 
+import com.github.oobila.bukkit.chat.Message;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -48,6 +50,18 @@ public class ABCommon {
 
     public static void log(Level level, Throwable t) {
         Bukkit.getLogger().log(level, t.getMessage(), t);
+    }
+
+    public static void message(Message message, Player player) {
+        if (player != null) {
+            message.send(player);
+        }
+    }
+
+    public static void message(String string, Player player) {
+        if (player != null) {
+            message(new Message(string), player);
+        }
     }
 
     @SuppressWarnings("UnstableApiUsage")
