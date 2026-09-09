@@ -12,13 +12,13 @@ import org.bukkit.Material;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -37,7 +37,7 @@ public class MaterialUtil {
 
     private static final int NUM_OF_COLORS = 16;
     private static final Map<ColoredMaterialMeta, Material> coloredMaterials = new HashMap<>();
-    private static final Map<ColoredMaterialType, List<Material>> coloredMaterialLists = new HashMap<>();
+    private static final Map<ColoredMaterialType, List<Material>> coloredMaterialLists = new EnumMap<>(ColoredMaterialType.class);
     static {
         for(ColoredMaterialType coloredMaterialType : ColoredMaterialType.values()) {
             for (BlockColor blockColor : BlockColor.values()) {
@@ -99,6 +99,66 @@ public class MaterialUtil {
         return SIGN_MATERIALS.contains(type);
     }
 
+    // #### BANNERS ####
+    @Getter
+    private static final List<Material> BANNER_MATERIALS = Arrays.stream(Material.values())
+            .filter(material -> material.name().toLowerCase().endsWith("banner"))
+            .toList();
+
+    public static boolean isBanner(Material type) {
+        return BANNER_MATERIALS.contains(type);
+    }
+
+    // #### DOORS ####
+    @Getter
+    private static final List<Material> DOOR_MATERIALS = Arrays.stream(Material.values())
+            .filter(material -> material.name().toLowerCase().endsWith(" door") || material.name().toLowerCase().endsWith("_door"))
+            .toList();
+
+    public static boolean isDoor(Material type) {
+        return DOOR_MATERIALS.contains(type);
+    }
+
+    // #### CARPET ####
+    @Getter
+    private static final List<Material> CARPET_MATERIALS = Arrays.stream(Material.values())
+            .filter(material -> material.name().toLowerCase().endsWith("carpet"))
+            .toList();
+
+    public static boolean isCarpet(Material type) {
+        return CARPET_MATERIALS.contains(type);
+    }
+
+    // #### BUTTON ####
+    @Getter
+    private static final List<Material> BUTTON_MATERIALS = Arrays.stream(Material.values())
+            .filter(material -> material.name().toLowerCase().endsWith("button"))
+            .toList();
+
+    public static boolean isButton(Material type) {
+        return BUTTON_MATERIALS.contains(type);
+    }
+
+    // #### PRESSURE PLATE ####
+    @Getter
+    private static final List<Material> PRESSURE_MATERIALS = Arrays.stream(Material.values())
+            .filter(material -> material.name().toLowerCase().contains("pressure"))
+            .toList();
+
+    public static boolean isPressurePlate(Material type) {
+        return PRESSURE_MATERIALS.contains(type);
+    }
+
+    // #### SAPLING ####
+    @Getter
+    private static final List<Material> SAPLING_MATERIALS = Arrays.stream(Material.values())
+            .filter(material -> material.name().toLowerCase().contains("sapling"))
+            .toList();
+
+    public static boolean isSapling(Material type) {
+        return SAPLING_MATERIALS.contains(type);
+    }
+
     // #### TRANSPARENT ####
     @Getter
     private static final List<Material> TRANSPARENT_MATERIALS = Arrays.stream(Material.values())
@@ -107,4 +167,5 @@ public class MaterialUtil {
 
     @Getter
     protected static final Set<Material> TRANSPARENT_MATERIAL_SET = new HashSet<>(TRANSPARENT_MATERIALS);
+
 }
